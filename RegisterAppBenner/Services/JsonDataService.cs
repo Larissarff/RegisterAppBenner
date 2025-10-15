@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace RegisterAppBenner.Services
 {
-    // Serviço genérico para operações CRUD em arquivos JSON
+    // Serviï¿½o genï¿½rico para operaï¿½ï¿½es CRUD em arquivos JSON
     public class JsonDataService<TypeOfModel>
     {
         private readonly string _filePath;
