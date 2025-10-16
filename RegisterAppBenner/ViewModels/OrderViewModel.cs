@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using RegisterAppBenner.Enums;
@@ -19,7 +20,7 @@ namespace RegisterAppBenner.ViewModels
         private OrderModel? _selectedOrder;
         private ProductModel? _selectedProduct;
         private PersonModel? _selectedPerson;
-        private PaymentMethod _selectedPaymentMethod;
+        private PaymentMethodEnum _selectedPaymentMethod;
         private int _quantity;
         private decimal _totalValue;
         private bool _isFinalized;
@@ -27,7 +28,8 @@ namespace RegisterAppBenner.ViewModels
         public ObservableCollection<OrderModel> Orders { get; set; }
         public ObservableCollection<ProductModel> Products { get; set; }
         public ObservableCollection<PersonModel> Persons { get; set; }
-        public ObservableCollection<OrderItemModel> OrderItems { get; set; } = new();
+        public ObservableCollection<OrderItemModel> OrderItems { get; set; }
+        public ObservableCollection<PaymentMethodEnum> PaymentMethods { get; set; }
 
         public OrderModel? SelectedOrder
         {
@@ -47,7 +49,7 @@ namespace RegisterAppBenner.ViewModels
             set { _selectedPerson = value; OnPropertyChanged(); }
         }
 
-        public PaymentMethod SelectedPaymentMethod
+        public PaymentMethodEnum SelectedPaymentMethod
         {
             get => _selectedPaymentMethod;
             set { _selectedPaymentMethod = value; OnPropertyChanged(); }
@@ -80,6 +82,11 @@ namespace RegisterAppBenner.ViewModels
             Orders = new ObservableCollection<OrderModel>(_orderService.GetAll());
             Products = new ObservableCollection<ProductModel>(_productService.GetAll());
             Persons = new ObservableCollection<PersonModel>(_personService.GetAll());
+            OrderItems = new ObservableCollection<OrderItemModel>();
+
+            PaymentMethods = new ObservableCollection<PaymentMethodEnum>(
+                Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>()
+            );
         }
 
         public void AddItemToOrder()
@@ -118,9 +125,6 @@ namespace RegisterAppBenner.ViewModels
                 if (OrderItems.Count == 0)
                     throw new Exception("Adicione pelo menos um item ao pedido.");
 
-                if (!Enum.IsDefined(typeof(PaymentMethod), SelectedPaymentMethod))
-                    throw new Exception("Selecione uma forma de pagamento.");
-
                 var items = new List<OrderItemModel>(OrderItems);
                 var order = new OrderModel(SelectedPerson, items, SelectedPaymentMethod);
 
@@ -153,7 +157,7 @@ namespace RegisterAppBenner.ViewModels
         {
             SelectedPerson = null;
             SelectedProduct = null;
-            SelectedPaymentMethod = PaymentMethod.Cash;
+            SelectedPaymentMethod = PaymentMethodEnum.Cash;
             Quantity = 0;
             TotalValue = 0;
             OrderItems.Clear();
