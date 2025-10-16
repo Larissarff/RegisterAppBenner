@@ -14,23 +14,43 @@ namespace RegisterAppBenner.Services
         public PersonService()
         {
             _dataService = new JsonDataService<PersonModel>(_filePath);
+
+            var existing = _dataService.LoadData(); // Load existing data to sync IDs
+            PersonModel.SyncNextId(existing);
         }
 
-        public List<PersonModel> GetAll() => _dataService.LoadData();
+        public List<PersonModel> GetAll() => _dataService.LoadData(); // Get all persons
 
-        public void Add(PersonModel person) => _dataService.Add(person);
+        public void Add(PersonModel person) // Add new person with CPF uniqueness check
+        {
+            if (Exists(person.Cpf))
+                throw new System.Exception("CPF already exists.");
+            _dataService.Add(person);
+        }
 
-        public PersonModel? GetById(int id)
+        public PersonModel? GetById(int id) // Search by ID
         {
             var people = _dataService.LoadData();
             return people.FirstOrDefault(p => p.Id == id);
         }
 
-        public void UpdateAddress(int id, string newAddress)
+        public PersonModel? GetByCpf(string cpf) // Search by CPF
+        {
+            var people = _dataService.LoadData();
+            return people.FirstOrDefault(p => p.Cpf == cpf);
+        }
+
+        public bool Exists(string cpf) // Check if CPF exists
+        {
+            var people = _dataService.LoadData();
+            return people.Any(p => p.Cpf == cpf);
+        }
+
+        public void UpdateAddress(int id, string newAddress) // Update address by ID
         {
             _dataService.Update(p => p.Id == id, p => p.Address = newAddress);
         }
 
-        public void DeleteById(int id) => _dataService.Delete(p => p.Id == id);
+        public void DeleteById(int id) => _dataService.Delete(p => p.Id == id); // Delete by ID
     }
 }

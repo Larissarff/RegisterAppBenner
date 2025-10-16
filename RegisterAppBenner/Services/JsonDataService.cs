@@ -14,13 +14,11 @@ namespace RegisterAppBenner.Services
         {
             _filePath = filePath;
 
-            // Garante que a pasta exista
             var dir = Path.GetDirectoryName(_filePath);
             if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
         }
 
-        // Ler todos os registros
         public List<TypeOfModel> LoadData()
         {
             if (!File.Exists(_filePath))
@@ -30,14 +28,12 @@ namespace RegisterAppBenner.Services
             return JsonConvert.DeserializeObject<List<TypeOfModel>>(json) ?? new List<TypeOfModel>();
         }
 
-        // Salvar todos os registros
         public void SaveData(List<TypeOfModel> data)
         {
             var json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(_filePath, json);
         }
 
-        // Adicionar um novo registro
         public void Add(TypeOfModel newItem)
         {
             var data = LoadData();
@@ -45,7 +41,6 @@ namespace RegisterAppBenner.Services
             SaveData(data);
         }
 
-        // Atualizar registros com base em uma condição
         public void Update(Func<TypeOfModel, bool> condition, Action<TypeOfModel> updateAction)
         {
             var data = LoadData();
@@ -57,7 +52,6 @@ namespace RegisterAppBenner.Services
             SaveData(data);
         }
 
-        // Excluir registros com base em uma condição
         public void Delete(Func<TypeOfModel, bool> condition)
         {
             var data = LoadData();
