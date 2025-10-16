@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
 
 namespace RegisterAppBenner.Models
@@ -31,6 +31,15 @@ namespace RegisterAppBenner.Models
 
             return true; 
         }
-        
+
+        [JsonConstructor]
+        private PersonModel(int id, string name, string cpf, string address)
+        {
+            Id = id;
+            Name = name;
+            Cpf = cpf;
+            Address = address;
+        }
+
     }
 }
