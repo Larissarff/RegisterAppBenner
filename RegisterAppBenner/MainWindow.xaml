@@ -5,8 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RegisterAppBenner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Register App Benner " Height="450" Width="800">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"/>
+
+			<ColumnDefinition Width="*"/>
+
+		</Grid.ColumnDefinitions>
+
+		<StackPanel VerticalAlignment="Stretch">
+			<StackPanel.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#FFB921BB" Offset="0.237"/>
+					<GradientStop Color="#FF164AC8" Offset="1"/>
+				</LinearGradientBrush>
+			</StackPanel.Background>
+			<TextBlock x:Name="Title" Text=" Menu"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       FontSize="36"
+                       Margin="10 15" FontFamily="Gabriola" Height="44"/>
+
+			<Button x:Name="PersonPage" Content="Pessoas"
+                    Margin="10 5"
+                    Click="OpenPersonView_Click"
+                    Background="#FFFF00C6"
+                    Foreground="White"
+                    FontSize="14" FontFamily="Franklin Gothic Medium"/>
+
+			
+
+			<Button x:Name="Out" Content="Sair"
+                    Margin="10 5"
+                    Click="ExitApp_Click"
+                    Background="#FF0306FF"
+                    Foreground="White"
+                    FontSize="14" FontFamily="Franklin Gothic Medium"/>
+		</StackPanel>
+
+		<Frame x:Name="MainFrame"
+               Grid.Column="1"
+               NavigationUIVisibility="Hidden"
+               Margin="10"
+               Background="White"/>
+	</Grid>
 </Window>

@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="RegisterAppBenner.Views.PersonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:RegisterAppBenner.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <viewModels:PersonViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Campos -->
+            <RowDefinition Height="Auto"/>
+            <!-- Botões -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+        </Grid.RowDefinitions>
+
+        <!-- 🧍 Campos de cadastro -->
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+            <Label Content="Nome:" Width="80" VerticalAlignment="Center"/>
+            <TextBox Width="200" Margin="0 0 20 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="CPF:" Width="50" VerticalAlignment="Center"/>
+            <TextBox Width="150" Margin="0 0 20 0" Text="{Binding Cpf, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Endereço:" Width="80" VerticalAlignment="Center"/>
+            <TextBox Width="250" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <!-- ⚙️ Botões de ação -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 0 0 10">
+            <Button Content="Adicionar" Width="100" Margin="0 0 10 0"
+                    Command="{x:Static ApplicationCommands.New}"
+                    Click="AddPerson_Click"/>
+
+            <Button Content="Atualizar" Width="100" Margin="0 0 10 0"
+                    Click="UpdatePerson_Click"/>
+
+            <Button Content="Excluir" Width="100"
+                    Click="DeletePerson_Click"/>
+        </StackPanel>
+
+        <!-- 📋 DataGrid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding People}" 
+                  SelectedItem="{Binding SelectedPerson}" 
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  CanUserAddRows="False"
+                  Margin="0,10,0,0">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Nome" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="CPF" Binding="{Binding Cpf}" Width="150"/>
+                <DataGridTextColumn Header="Endereço" Binding="{Binding Address}" Width="250"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
