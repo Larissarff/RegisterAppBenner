@@ -38,9 +38,22 @@ namespace RegisterAppBenner.Models
 			Status = OrderStatus.Pending;
 		}
 
-		public void UpdateStatus(OrderStatus newStatus)
-		{
+		public void UpdateStatus(OrderStatus newStatus) // Method to update order status
+        {
 			Status = newStatus;
 		}
-	}
+
+		public void UpdatePaymentMethod(PaymentMethod newPaymentMethod) // Method to update payment method
+        {
+			if (!Enum.IsDefined(typeof(PaymentMethod), newPaymentMethod))
+				throw new ArgumentException("Invalid payment method.", nameof(newPaymentMethod));
+			PaymentMethod = newPaymentMethod;
+        }
+
+        public static void SyncNextId(IEnumerable<OrderModel> existing) // Sync next ID based on existing data
+        {
+            if (existing.Any())
+                _nextId = existing.Max(p => p.Id) + 1;
+        }
+    }
 }

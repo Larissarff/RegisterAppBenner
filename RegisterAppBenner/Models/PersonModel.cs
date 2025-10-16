@@ -34,7 +34,7 @@ namespace RegisterAppBenner.Models
 
             return true; 
         }
-        public static void SyncNextId(IEnumerable<PersonModel> existing)
+        public static void SyncNextId(IEnumerable<PersonModel> existing) // Sync next ID based on existing data
         {
             if (existing.Any())
                 _nextId = existing.Max(p => p.Id) + 1;
