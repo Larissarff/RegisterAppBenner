@@ -10,7 +10,7 @@ namespace RegisterAppBenner.Services
     public class OrderService
     {
         private readonly JsonDataService<OrderModel> _dataService;
-        private readonly string _filePath = Path.Combine("Data", "orders.json");
+        private readonly string _filePath = Path.Combine("orders.json");
 
         public OrderService()
         {
@@ -31,7 +31,7 @@ namespace RegisterAppBenner.Services
             return orders.Where(o => o.Person.Cpf == cpf).ToList();
         }
 
-        public List<OrderModel> GetByStatus(OrderStatus status) // Search by Order Status
+        public List<OrderModel> GetByStatus(OrderStatusEnum status) // Search by Order Status
         {
             var orders = _dataService.LoadData();
             return orders.Where(o => o.Status == status).ToList();
@@ -45,12 +45,12 @@ namespace RegisterAppBenner.Services
             _dataService.Add(order);
         }
 
-        public void UpdateStatus(int orderId, OrderStatus newStatus) // Update order status
+        public void UpdateStatus(int orderId, OrderStatusEnum newStatus) // Update order status
         {
             _dataService.Update(o => o.Id == orderId, o => o.UpdateStatus(newStatus));
         }
         
-        public void UpdatePaymentMethod(int orderId, PaymentMethod newPaymentMethod) // Update payment method
+        public void UpdatePaymentMethod(int orderId, PaymentMethodEnum newPaymentMethod) // Update payment method
         {
             _dataService.Update(o => o.Id == orderId, o => o.UpdatePaymentMethod(newPaymentMethod));
         }
