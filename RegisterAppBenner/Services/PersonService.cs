@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using RegisterAppBenner.Models;
 using RegisterAppBenner.Services;
 
@@ -19,7 +20,11 @@ namespace RegisterAppBenner.Services
 
         public void Add(PersonModel person) => _dataService.Add(person);
 
-        public PersonModel? GetById(int id) => _dataService.Get(p => p.Id == id);
+        public PersonModel? GetById(int id)
+        {
+            var people = _dataService.LoadData();
+            return people.FirstOrDefault(p => p.Id == id);
+        }
 
         public void UpdateAddress(int id, string newAddress)
         {

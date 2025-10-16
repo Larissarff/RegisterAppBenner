@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace RegisterAppBenner.Services
 {
-    // Serviço generico para operaçoes CRUD em arquivos JSON
+    // Serviço genérico para operações CRUD em arquivos JSON
     public class JsonDataService<TypeOfModel>
     {
         private readonly string _filePath;
@@ -15,61 +14,55 @@ namespace RegisterAppBenner.Services
         {
             _filePath = filePath;
 
-            var directory = Path.GetDirectoryName(_filePath);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            // Garante que a pasta exista
+            var dir = Path.GetDirectoryName(_filePath);
+            if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
         }
 
+        // Ler todos os registros
         public List<TypeOfModel> LoadData()
         {
             if (!File.Exists(_filePath))
                 return new List<TypeOfModel>();
 
             var json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<List<TypeOfModel>>(json) ?? new List<TypeOfModel>();
+            return JsonConvert.DeserializeObject<List<TypeOfModel>>(json) ?? new List<TypeOfModel>();
         }
 
+        // Salvar todos os registros
         public void SaveData(List<TypeOfModel> data)
         {
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(_filePath, json);
         }
 
-        public void Add(TypeOfModel item)
+        // Adicionar um novo registro
+        public void Add(TypeOfModel newItem)
         {
             var data = LoadData();
-            data.Add(item);
+            data.Add(newItem);
             SaveData(data);
         }
 
-        public TypeOfModel? Get(Func<TypeOfModel, bool> predicate)
+        // Atualizar registros com base em uma condição
+        public void Update(Func<TypeOfModel, bool> condition, Action<TypeOfModel> updateAction)
         {
             var data = LoadData();
-            return data.FirstOrDefault(predicate);
+            foreach (var item in data)
+            {
+                if (condition(item))
+                    updateAction(item);
+            }
+            SaveData(data);
         }
 
-        public void Update(Func<TypeOfModel, bool> predicate, Action<TypeOfModel> updateAction)
+        // Excluir registros com base em uma condição
+        public void Delete(Func<TypeOfModel, bool> condition)
         {
             var data = LoadData();
-            var item = data.FirstOrDefault(predicate);
-
-            if (item != null)
-            {
-                updateAction(item);
-                SaveData(data);
-            }
-        }
-
-        public void Delete(Func<TypeOfModel, bool> predicate)
-        {
-            var data = LoadData();
-            var itemToRemove = data.FirstOrDefault(predicate);
-
-            if (itemToRemove != null)
-            {
-                data.Remove(itemToRemove);
-                SaveData(data);
-            }
+            data.RemoveAll(new Predicate<TypeOfModel>(condition));
+            SaveData(data);
         }
     }
 }
