@@ -21,7 +21,7 @@
             <!-- DataGrid -->
         </Grid.RowDefinitions>
 
-        <!-- 🧍 Campos de cadastro -->
+        <!--  Campos de cadastro -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <Label Content="Nome:" Width="80" VerticalAlignment="Center"/>
             <TextBox Width="200" Margin="0 0 20 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
@@ -33,10 +33,10 @@
             <TextBox Width="250" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
-        <!-- ⚙️ Botões de ação -->
+        <!--  Botões de ação -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 0 0 10">
             <Button Content="Adicionar" Width="100" Margin="0 0 10 0"
-                    Command="{x:Static ApplicationCommands.New}"
+        
                     Click="AddPerson_Click"/>
 
             <Button Content="Atualizar" Width="100" Margin="0 0 10 0"
@@ -46,7 +46,7 @@
                     Click="DeletePerson_Click"/>
         </StackPanel>
 
-        <!-- 📋 DataGrid -->
+        <!--  DataGrid -->
         <DataGrid Grid.Row="2" ItemsSource="{Binding People}" 
                   SelectedItem="{Binding SelectedPerson}" 
                   AutoGenerateColumns="False"
