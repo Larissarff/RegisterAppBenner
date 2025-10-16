@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RegisterAppBenner.Models
 {
     public class ProductModel
     {
-        private static int _nextId = 1;
         public int Id { get; private set; }
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
@@ -14,8 +14,6 @@ namespace RegisterAppBenner.Models
 
         public ProductModel( string name, string code, decimal price)
         {
-            Id = _nextId++;
-
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name is required.", nameof(name));
 
@@ -30,11 +28,13 @@ namespace RegisterAppBenner.Models
             Price = price;
         }
 
-        public static void SyncNextId(IEnumerable<ProductModel> existing)
+        [JsonConstructor]
+        private ProductModel(int id, string name, string code, decimal price)
         {
-            if (existing.Any())
-                _nextId = existing.Max(p => p.Id) + 1;
+            Id = id;
+            Name = name;
+            Code = code;
+            Price = price;
         }
-
     }
 }

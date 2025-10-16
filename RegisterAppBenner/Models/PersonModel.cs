@@ -6,7 +6,6 @@ namespace RegisterAppBenner.Models
 {
     public class PersonModel
     {
-        private static int _nextId = 1;
         public int Id { get; private set; }
         public string Name { get; set; } = string.Empty;
         public string Cpf { get; set; } = string.Empty;
@@ -18,8 +17,6 @@ namespace RegisterAppBenner.Models
                 throw new ArgumentException("Name is required.", nameof(name));
             if (!IsValidCpf(cpf))
                 throw new ArgumentException("Invalid CPF.", nameof(cpf));
-
-            Id = _nextId++;
             Name = name.Trim();
             Cpf = cpf.Trim();
             Address = address.Trim();
@@ -34,10 +31,6 @@ namespace RegisterAppBenner.Models
 
             return true; 
         }
-        public static void SyncNextId(IEnumerable<PersonModel> existing) // Sync next ID based on existing data
-        {
-            if (existing.Any())
-                _nextId = existing.Max(p => p.Id) + 1;
-        }
+        
     }
 }
