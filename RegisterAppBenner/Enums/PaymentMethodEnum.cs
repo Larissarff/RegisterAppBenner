@@ -1,6 +1,6 @@
 namespace RegisterAppBenner.Enums;
 
-public enum PaymentMethod
+public enum PaymentMethodEnum
 {
     Cash,
     CreditCard,

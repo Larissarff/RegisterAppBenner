@@ -15,10 +15,10 @@ namespace RegisterAppBenner.Models
 		public List<OrderItemModel> Items { get; private set; } = new();
 		public decimal TotalValue { get; private set; }
 		public DateTime SaleDate { get; private set; }
-		public PaymentMethod PaymentMethod { get; private set; }
-		public OrderStatus Status { get; private set; }
+		public PaymentMethodEnum PaymentMethod { get; private set; }
+		public OrderStatusEnum Status { get; private set; }
 
-		public OrderModel(PersonModel person, List<OrderItemModel> items, PaymentMethod paymentMethod)
+		public OrderModel(PersonModel person, List<OrderItemModel> items, PaymentMethodEnum paymentMethod)
 		{
 			if (person == null)
 				throw new ArgumentException("Person is required.", nameof(person));
@@ -26,7 +26,7 @@ namespace RegisterAppBenner.Models
 			if (items == null || !items.Any())
 				throw new ArgumentException("At least one product is required.", nameof(items));
 
-			if (!Enum.IsDefined(typeof(PaymentMethod), paymentMethod))
+			if (!Enum.IsDefined(typeof(PaymentMethodEnum), paymentMethod))
 				throw new ArgumentException("Invalid payment method.", nameof(paymentMethod));
 
 			Person = person;
@@ -35,23 +35,23 @@ namespace RegisterAppBenner.Models
 
 			TotalValue = Items.Sum(i => i.Product.Price * i.Quantity);
 			SaleDate = DateTime.Now;
-			Status = OrderStatus.Pending;
+			Status = OrderStatusEnum.Pending;
 		}
 
-		public void UpdateStatus(OrderStatus newStatus) // Method to update order status
+		public void UpdateStatus(OrderStatusEnum newStatus) // Method to update order status
         {
 			Status = newStatus;
 		}
 
-		public void UpdatePaymentMethod(PaymentMethod newPaymentMethod) // Method to update payment method
+		public void UpdatePaymentMethod(PaymentMethodEnum newPaymentMethod) // Method to update payment method
         {
-			if (!Enum.IsDefined(typeof(PaymentMethod), newPaymentMethod))
+			if (!Enum.IsDefined(typeof(PaymentMethodEnum), newPaymentMethod))
 				throw new ArgumentException("Invalid payment method.", nameof(newPaymentMethod));
 			PaymentMethod = newPaymentMethod;
         }
 
         [JsonConstructor]
-        private OrderModel(int id, PersonModel person, List<OrderItemModel> items, decimal totalValue, DateTime saleDate, PaymentMethod paymentMethod, OrderStatus status)
+        private OrderModel(int id, PersonModel person, List<OrderItemModel> items, decimal totalValue, DateTime saleDate, PaymentMethodEnum paymentMethod, OrderStatusEnum status)
         {
             Id = id;
             Person = person;

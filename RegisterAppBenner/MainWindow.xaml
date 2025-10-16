@@ -41,6 +41,15 @@
                     Foreground="White" 
                     FontSize="14" FontFamily="Franklin Gothic Medium"/>
 
+            <Button x:Name="OrderPage"
+                Content="Pedidos"
+                Margin="10 5"
+                Click="OpenOrderView_Click"
+                Background="#FFFF00C6"
+                Foreground="White"
+                FontSize="14"
+                FontFamily="Franklin Gothic Medium"/>
+
             <Button x:Name="Out" Content="Sair"
                     Margin="10 5"
                     Click="ExitApp_Click"
