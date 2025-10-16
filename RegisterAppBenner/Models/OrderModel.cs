@@ -43,14 +43,14 @@ namespace RegisterAppBenner.Models
 			Status = newStatus;
 		}
 
-		public void UpdadePaymentMethod(PaymentMethod newPaymentMethod) // Method to update payment method
+		public void UpdatePaymentMethod(PaymentMethod newPaymentMethod) // Method to update payment method
         {
 			if (!Enum.IsDefined(typeof(PaymentMethod), newPaymentMethod))
 				throw new ArgumentException("Invalid payment method.", nameof(newPaymentMethod));
 			PaymentMethod = newPaymentMethod;
         }
 
-        public static void SyncNextId(IEnumerable<PersonModel> existing) // Sync next ID based on existing data
+        public static void SyncNextId(IEnumerable<OrderModel> existing) // Sync next ID based on existing data
         {
             if (existing.Any())
                 _nextId = existing.Max(p => p.Id) + 1;
