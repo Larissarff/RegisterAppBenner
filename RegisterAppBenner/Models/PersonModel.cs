@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RegisterAppBenner.Models
@@ -32,6 +33,11 @@ namespace RegisterAppBenner.Models
                 return false;
 
             return true; 
+        }
+        public static void SyncNextId(IEnumerable<PersonModel> existing)
+        {
+            if (existing.Any())
+                _nextId = existing.Max(p => p.Id) + 1;
         }
     }
 }
