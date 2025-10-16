@@ -1,6 +1,6 @@
 namespace RegisterAppBenner.Enums;
 
-public enum OrderStatus
+public enum OrderStatusEnum
 {
     Pending,
     Paid,
