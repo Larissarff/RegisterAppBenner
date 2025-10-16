@@ -1,14 +1,15 @@
+using Newtonsoft.Json;
+using RegisterAppBenner.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using RegisterAppBenner.Enums;
+using System.Xml.Linq;
 
 namespace RegisterAppBenner.Models
 {
 	public class OrderModel
 	{
-		private static int _nextId = 1;
-
 		public int Id { get; private set; }
 		public PersonModel Person { get; private set; }
 		public List<OrderItemModel> Items { get; private set; } = new();
@@ -28,7 +29,6 @@ namespace RegisterAppBenner.Models
 			if (!Enum.IsDefined(typeof(PaymentMethod), paymentMethod))
 				throw new ArgumentException("Invalid payment method.", nameof(paymentMethod));
 
-			Id = _nextId++;
 			Person = person;
 			Items = items;
 			PaymentMethod = paymentMethod;
@@ -50,10 +50,16 @@ namespace RegisterAppBenner.Models
 			PaymentMethod = newPaymentMethod;
         }
 
-        public static void SyncNextId(IEnumerable<OrderModel> existing) // Sync next ID based on existing data
+        [JsonConstructor]
+        private OrderModel(int id, PersonModel person, List<OrderItemModel> items, decimal totalValue, DateTime saleDate, PaymentMethod paymentMethod, OrderStatus status)
         {
-            if (existing.Any())
-                _nextId = existing.Max(p => p.Id) + 1;
+            Id = id;
+            Person = person;
+            Items = items ?? new List<OrderItemModel>();
+            TotalValue = totalValue;
+            SaleDate = saleDate;
+            PaymentMethod = paymentMethod;
+            Status = status;
         }
     }
 }

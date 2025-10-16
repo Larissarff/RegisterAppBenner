@@ -17,7 +17,6 @@ namespace RegisterAppBenner.Services
             _dataService = new JsonDataService<OrderModel>(_filePath);
 
             var existing = _dataService.LoadData();
-            OrderModel.SyncNextId(existing);
         }
         public List<OrderModel> GetAll() => _dataService.LoadData(); // Get all orders
 
