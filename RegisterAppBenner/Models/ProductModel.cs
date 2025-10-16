@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RegisterAppBenner.Models
 {
@@ -26,6 +28,12 @@ namespace RegisterAppBenner.Models
             Name = name.Trim();
             Code = code.Trim();
             Price = price;
+        }
+
+        public static void SyncNextId(IEnumerable<ProductModel> existing)
+        {
+            if (existing.Any())
+                _nextId = existing.Max(p => p.Id) + 1;
         }
 
     }
