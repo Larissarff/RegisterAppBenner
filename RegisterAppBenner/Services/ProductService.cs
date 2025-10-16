@@ -9,14 +9,13 @@ namespace RegisterAppBenner.Services
     public class ProductService
     {
             private readonly JsonDataService<ProductModel> _dataService;
-            private readonly string _filePath = Path.Combine("Data", "product.json");
+            private readonly string _filePath = Path.Combine("product.json");
 
             public ProductService()
             {
                 _dataService = new JsonDataService<ProductModel>(_filePath);
 
                 var existing = _dataService.LoadData(); // Load existing data to sync IDs
-                ProductModel.SyncNextId(existing);
             }
 
             public List<ProductModel> GetAll() => _dataService.LoadData(); // Get all products
@@ -27,6 +26,8 @@ namespace RegisterAppBenner.Services
                     throw new System.Exception("Product code already exists.");
                 if (ExistsName(product.Name))
                     throw new System.Exception("Product name already exists.");
+                if (product.Price == 0)
+                    throw new System.Exception("Product price is required.");
 
             _dataService.Add(product);
             }
@@ -72,8 +73,13 @@ namespace RegisterAppBenner.Services
                 _dataService.Update(p => p.Id == id, p => p.Price = newPrice);
             }
 
-            public void DeleteById(int id) => _dataService.Delete(p => p.Id == id); // Delete by ID
-        }
+            public void DeleteById(int id)
+            {
+                _dataService.Delete(p => p.Id == id);
+
+                var existing = _dataService.LoadData();
+            }
+    }
 
 }
 
