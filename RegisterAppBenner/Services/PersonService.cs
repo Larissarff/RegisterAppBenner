@@ -9,14 +9,13 @@ namespace RegisterAppBenner.Services
     public class PersonService
     {
         private readonly JsonDataService<PersonModel> _dataService;
-        private readonly string _filePath = Path.Combine("Data", "persons.json");
+        private readonly string _filePath = Path.Combine("persons.json");
 
         public PersonService()
         {
             _dataService = new JsonDataService<PersonModel>(_filePath);
 
             var existing = _dataService.LoadData(); // Load existing data to sync IDs
-            PersonModel.SyncNextId(existing);
         }
 
         public List<PersonModel> GetAll() => _dataService.LoadData(); // Get all persons
