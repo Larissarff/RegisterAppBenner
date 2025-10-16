@@ -17,10 +17,10 @@ namespace RegisterAppBenner
             MainFrame.Navigate(new PersonView());
         }
 
-        //private void OpenProductView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MainFrame.Navigate(new ProductView());
-        //}
+        private void OpenProductView_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ProductView());
+        }
 
         //private void OpenOrderView_Click(object sender, RoutedEventArgs e)
         //{

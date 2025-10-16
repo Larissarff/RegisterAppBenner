@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RegisterAppBenner"
         mc:Ignorable="d"
-        Title="Register App Benner " Height="450" Width="800">
+        Title="Register App Benner " Height="450" Width="1070">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="200"/>
@@ -34,9 +34,14 @@
                     Foreground="White"
                     FontSize="14" FontFamily="Franklin Gothic Medium"/>
 
-			
+            <Button x:Name="ProductPage" Content="Produtos" 
+                    Margin="10 5"
+                    Click="OpenProductView_Click"
+                    Background="#FFFF00C6" 
+                    Foreground="White" 
+                    FontSize="14" FontFamily="Franklin Gothic Medium"/>
 
-			<Button x:Name="Out" Content="Sair"
+            <Button x:Name="Out" Content="Sair"
                     Margin="10 5"
                     Click="ExitApp_Click"
                     Background="#FF0306FF"
