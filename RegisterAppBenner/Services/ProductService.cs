@@ -21,11 +21,14 @@ namespace RegisterAppBenner.Services
 
             public List<ProductModel> GetAll() => _dataService.LoadData(); // Get all products
 
-            public void Add(ProductModel product) // Add new product with code uniqueness check
+            public void Add(ProductModel product) // Add new product with code and name uniqueness check
             {
-                if (Exists(product.Code))
+                if (ExistsCode(product.Code))
                     throw new System.Exception("Product code already exists.");
-                _dataService.Add(product);
+                if (ExistsName(product.Name))
+                    throw new System.Exception("Product name already exists.");
+
+            _dataService.Add(product);
             }
 
             public ProductModel? GetById(int id) // Search by ID
@@ -40,10 +43,28 @@ namespace RegisterAppBenner.Services
                 return product.FirstOrDefault(p => p.Code == code);
             }
 
-            public bool Exists(string code) // Check if code exists
+            public ProductModel? GetByName(string name) // Search by Name
+            {
+                var product = _dataService.LoadData();
+                return product.FirstOrDefault(p => p.Name == name);
+            }
+
+            public List<ProductModel> GetByRangeValue(decimal minValue, decimal maxValue) // Buscar por intervalo de valores
+            {
+                var products = _dataService.LoadData();
+                return products.Where(p => p.Price >= minValue && p.Price <= maxValue).ToList();
+            }
+
+            public bool ExistsCode(string code) // Check if code exists
             {
                 var product = _dataService.LoadData();
                 return product.Any(p => p.Code == code);
+            }
+
+            public bool ExistsName(string name) // Check if name exists
+            {
+                var product = _dataService.LoadData();
+                return product.Any(p => p.Name == name);
             }
 
             public void UpdatePrice(int id, decimal newPrice) // Update price by ID
