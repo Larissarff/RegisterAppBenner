@@ -166,7 +166,7 @@ A persistência utiliza **arquivos JSON locais**, manipulados pela classe genér
  
  ┃ ┣ MultiplyConverter.cs
 
-┣ 📁 Data
+┣ 📁 Data (criada no momento da execução do código)
  
  ┣ 📄 persons.json
  
