@@ -5,6 +5,13 @@ using System.Windows.Data;
 namespace RegisterAppBenner.Converters
 {
     public class MultiplyConverter : IValueConverter
+    /// <summary>
+    /// Converter utilizado para multiplicar dois valores (ex: preço * quantidade)
+    /// diretamente em um binding no XAML. 
+    /// 
+    /// Permite calcular dinamicamente valores derivados de propriedades do ViewModel,
+    /// como o subtotal de um item de pedido.
+    /// </summary>
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
