@@ -1,12 +1,13 @@
-﻿using System;
+﻿using RegisterAppBenner.Models;
+using RegisterAppBenner.Services;
+using RegisterAppBenner.Views;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using RegisterAppBenner.Models;
-using RegisterAppBenner.Services;
-using RegisterAppBenner.Views;
 
 namespace RegisterAppBenner.ViewModels
 {
@@ -65,6 +66,18 @@ namespace RegisterAppBenner.ViewModels
             set { _cpfFilter = value; OnPropertyChanged(); ApplyFilters(); }
         }
 
+        private string _statusOrderFilter = string.Empty;
+        public string StatusOrderFilter
+        {
+            get => _statusOrderFilter;
+            set
+            {
+                _statusOrderFilter = value;
+                OnPropertyChanged();
+                ApplyOrderStatusFilter();
+            }
+        }
+
         public PersonViewModel()
         {
             _personService = new PersonService();
@@ -79,7 +92,7 @@ namespace RegisterAppBenner.ViewModels
                 if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Cpf))
                     throw new Exception("Nome e CPF são obrigatórios.");
 
-                var newPerson = new PersonModel(Name.Trim(), Cpf.Trim(), Address.Trim());
+                PersonModel newPerson = new PersonModel(Name.Trim(), Cpf.Trim(), Address.Trim());
                 _personService.Add(newPerson);
                 People.Add(newPerson);
                 ClearFields();
@@ -141,6 +154,8 @@ namespace RegisterAppBenner.ViewModels
             var orders = _orderService.GetByCustomerCpf(SelectedPerson.Cpf);
             foreach (var order in orders)
                 PersonOrders.Add(order);
+
+            ApplyOrderStatusFilter();
         }
 
         public void OpenOrderWindow()
@@ -151,15 +166,12 @@ namespace RegisterAppBenner.ViewModels
                 return;
             }
 
-            var orderView = new OrderView
-            {
-                DataContext = new OrderViewModel
-                {
-                    SelectedPerson = SelectedPerson
-                }
-            };
+            OrderView orderView = new OrderView();
 
-            var window = new Window
+            OrderViewModel orderViewModel = (OrderViewModel)orderView.DataContext;
+            orderViewModel.SelectedPerson = SelectedPerson;
+
+            Window window = new Window
             {
                 Title = $"Novo Pedido - {SelectedPerson.Name}",
                 Content = orderView,
@@ -173,10 +185,9 @@ namespace RegisterAppBenner.ViewModels
             LoadOrdersForPerson();
         }
 
-
         private void ApplyFilters()
         {
-            var filtered = _personService.GetAll()
+            List<PersonModel> filtered = _personService.GetAll()
                 .Where(p =>
                     (string.IsNullOrWhiteSpace(NameFilter) ||
                      (!string.IsNullOrEmpty(p.Name) && p.Name.ToLower().Contains(NameFilter.ToLower()))) &&
@@ -185,15 +196,44 @@ namespace RegisterAppBenner.ViewModels
                 .ToList();
 
             People.Clear();
-            foreach (var person in filtered)
+            foreach (PersonModel person in filtered)
                 People.Add(person);
         }
+
+        private void ApplyOrderStatusFilter()
+        {
+            if (SelectedPerson == null)
+            {
+                PersonOrders.Clear();
+                return;
+            }
+
+            List<OrderModel> allOrders = _orderService.GetByCustomerCpf(SelectedPerson.Cpf);
+
+            List<OrderModel> filteredOrders = new List<OrderModel>();
+            foreach (OrderModel order in allOrders)
+            {
+                if (string.IsNullOrWhiteSpace(StatusOrderFilter) ||
+                    order.Status.ToString().IndexOf(StatusOrderFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    filteredOrders.Add(order);
+                }
+            }
+
+            PersonOrders.Clear();
+            foreach (OrderModel order in filteredOrders)
+            {
+                PersonOrders.Add(order);
+            }
+        }
+
+
 
         private void LoadPeople()
         {
             People.Clear();
-            var list = _personService.GetAll();
-            foreach (var person in list)
+            List<PersonModel> list = _personService.GetAll();
+            foreach (PersonModel person in list)
                 People.Add(person);
         }
 

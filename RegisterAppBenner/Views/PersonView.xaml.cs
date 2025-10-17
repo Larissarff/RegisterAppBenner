@@ -26,13 +26,34 @@ namespace RegisterAppBenner.Views
         {
             _viewModel.UpdatePerson();
         }
+        private bool _isEditingCell = false;
+
         private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.Row.Item is PersonModel editedPerson)
+            if (_isEditingCell)
+                return;
+
+            _isEditingCell = true;
+
+            try
             {
-                _viewModel.SelectedPerson = editedPerson;
+                DataGrid dataGrid = (DataGrid)sender;
+
+                if (e.EditAction == DataGridEditAction.Commit)
+                    dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+
+                if (e.Row.Item is PersonModel editedPerson)
+                {
+                    _viewModel.SelectedPerson = editedPerson;
+                }
+            }
+            finally
+            {
+                _isEditingCell = false;
             }
         }
+
+
 
         private void DeletePerson_Click(object sender, RoutedEventArgs e)
         {
