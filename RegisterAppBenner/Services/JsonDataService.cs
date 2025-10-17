@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using RegisterAppBenner.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace RegisterAppBenner.Services
 
         public JsonDataService(string fileName)
         {
-            var baseDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\.."));
+            string baseDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\.."));
 
             string dataDir = Path.Combine(baseDir, "Data");
 
@@ -37,7 +38,7 @@ namespace RegisterAppBenner.Services
                 if (!File.Exists(_filePath))
                     return new List<TypeOfModel>();
 
-                var json = File.ReadAllText(_filePath);
+                string json = File.ReadAllText(_filePath);
                 return JsonConvert.DeserializeObject<List<TypeOfModel>>(json) ?? new List<TypeOfModel>();
             }
             catch (Exception ex)
@@ -51,7 +52,7 @@ namespace RegisterAppBenner.Services
         {
             try
             {
-                var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
                 File.WriteAllText(_filePath, json);
                 Console.WriteLine($"[DEBUG] Dados salvos em {_filePath}");
             }
@@ -63,7 +64,7 @@ namespace RegisterAppBenner.Services
 
         public void Add(TypeOfModel newItem)
         {
-            var data = LoadData();
+            List<TypeOfModel> data = LoadData();
 
             var idProperty = typeof(TypeOfModel).GetProperty("Id");
             if (idProperty != null)
@@ -83,8 +84,8 @@ namespace RegisterAppBenner.Services
 
         public void Update(Func<TypeOfModel, bool> condition, Action<TypeOfModel> updateAction)
         {
-            var data = LoadData();
-            foreach (var item in data)
+            List<TypeOfModel> data = LoadData();
+            foreach (TypeOfModel item in data)
             {
                 if (condition(item))
                     updateAction(item);
@@ -94,7 +95,7 @@ namespace RegisterAppBenner.Services
 
         public void Delete(Func<TypeOfModel, bool> condition)
         {
-            var data = LoadData();
+            List<TypeOfModel> data = LoadData();
             data.RemoveAll(new Predicate<TypeOfModel>(condition));
             SaveData(data);
         }

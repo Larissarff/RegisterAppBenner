@@ -52,7 +52,7 @@ namespace RegisterAppBenner.ViewModels
         {
             try
             {
-                var product = new ProductModel(Name, Code, Price); // Create new product
+                ProductModel product = new ProductModel(Name, Code, Price); // Create new product
                 _productService.Add(product);  // Add to service (with validation)
                 Products.Add(product);         // Add to observable collection for UI
                 ClearFields();                 // Clear input fields
