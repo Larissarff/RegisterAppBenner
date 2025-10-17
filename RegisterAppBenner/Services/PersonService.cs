@@ -51,17 +51,21 @@ namespace RegisterAppBenner.Services
             _dataService.Update(p => p.Id == id, p => p.Address = newAddress);
         }
 
-        public void Update(PersonModel updatedPerson)
+        public void Update(int id, string newName, string newCpf, string newAddress) // Update person details by ID
         {
             List<PersonModel> people = _dataService.LoadData();
-            PersonModel? existing = people.FirstOrDefault(p => p.Id == updatedPerson.Id);
+            PersonModel? existing = people.FirstOrDefault(p => p.Id == id);
 
             if (existing == null)
                 throw new Exception("Pessoa não encontrada.");
 
-            existing.Name = updatedPerson.Name;
-            existing.Cpf = updatedPerson.Cpf;
-            existing.Address = updatedPerson.Address;
+            _dataService.Update(p => p.Id == id,
+                    p =>
+                    {
+                        p.Name = newName;
+                        p.Cpf = newCpf;
+                        p.Address = newAddress;
+                    });
 
             _dataService.SaveData(people);
         }

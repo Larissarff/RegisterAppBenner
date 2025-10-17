@@ -115,7 +115,10 @@ namespace RegisterAppBenner.ViewModels
 
             try
             {
-                _personService.Update(SelectedPerson);
+                _personService.Update(SelectedPerson.Id, Name, Cpf, Address);
+                SelectedPerson.Name = Name;
+                SelectedPerson.Cpf = Cpf;
+                SelectedPerson.Address = Address;
                 MessageBox.Show("Informações atualizadas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -226,8 +229,6 @@ namespace RegisterAppBenner.ViewModels
                 PersonOrders.Add(order);
             }
         }
-
-
 
         private void LoadPeople()
         {
