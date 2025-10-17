@@ -15,7 +15,7 @@ namespace RegisterAppBenner.Services
             {
                 _dataService = new JsonDataService<ProductModel>(_filePath);
 
-                var existing = _dataService.LoadData(); // Load existing data to sync IDs
+                List<ProductModel> existing = _dataService.LoadData(); // Load existing data to sync IDs
             }
 
             public List<ProductModel> GetAll() => _dataService.LoadData(); // Get all products
@@ -34,43 +34,55 @@ namespace RegisterAppBenner.Services
 
             public ProductModel? GetById(int id) // Search by ID
             {
-                var product = _dataService.LoadData();
+                List<ProductModel> product = _dataService.LoadData();
                 return product.FirstOrDefault(p => p.Id == id);
             }
 
             public ProductModel? GetByCode(string code) // Search by Code
             {
-                var product = _dataService.LoadData();
+                List<ProductModel> product = _dataService.LoadData();
                 return product.FirstOrDefault(p => p.Code == code);
             }
 
             public ProductModel? GetByName(string name) // Search by Name
             {
-                var product = _dataService.LoadData();
+                List<ProductModel> product = _dataService.LoadData();
                 return product.FirstOrDefault(p => p.Name == name);
             }
 
             public List<ProductModel> GetByRangeValue(decimal minValue, decimal maxValue) // Buscar por intervalo de valores
             {
-                var products = _dataService.LoadData();
+                List<ProductModel> products = _dataService.LoadData();
                 return products.Where(p => p.Price >= minValue && p.Price <= maxValue).ToList();
             }
 
             public bool ExistsCode(string code) // Check if code exists
             {
-                var product = _dataService.LoadData();
+                List<ProductModel> product = _dataService.LoadData();
                 return product.Any(p => p.Code == code);
             }
 
             public bool ExistsName(string name) // Check if name exists
             {
-                var product = _dataService.LoadData();
+                List<ProductModel> product = _dataService.LoadData();
                 return product.Any(p => p.Name == name);
             }
 
-            public void UpdatePrice(int id, decimal newPrice) // Update price by ID
+            public void UpdateProduct(int id, string newName, string newCode, decimal newPrice) // Update price by ID
             {
-                _dataService.Update(p => p.Id == id, p => p.Price = newPrice);
+                List<ProductModel> product = _dataService.LoadData();
+                ProductModel? existing = product.FirstOrDefault(p => p.Id == id);
+
+                if (existing == null)
+                    throw new Exception("Produto não encontrada.");
+
+                _dataService.Update(p => p.Id == id,
+                    p =>
+                    {
+                        p.Name = newName;
+                        p.Code = newCode;
+                        p.Price = newPrice;
+                    });
             }
 
             public void DeleteById(int id)
