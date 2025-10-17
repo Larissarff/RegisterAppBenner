@@ -1,9 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using RegisterAppBenner.Models;
+using RegisterAppBenner.Services;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using RegisterAppBenner.Models;
-using RegisterAppBenner.Services;
+using System.Linq;
+using System;
 
 namespace RegisterAppBenner.ViewModels
 {
@@ -26,20 +29,51 @@ namespace RegisterAppBenner.ViewModels
         private string _name = string.Empty;
         private string _code = string.Empty;
         private decimal _price;
+        private string _nameFilter = string.Empty;
+        private string _codeFilter = string.Empty;
+        private decimal _minPriceFilter;
+        private decimal _maxPriceFilter;
+
         public string Name
         {
             get => _name;
-            set { _name = value; OnPropertyChanged(); } // Notify UI of changes 
+            set { _name = value; OnPropertyChanged(); }
         }
+
         public string Code
         {
             get => _code;
-            set { _code = value; OnPropertyChanged(); } // Notify UI of changes
+            set { _code = value; OnPropertyChanged(); }
         }
+
         public decimal Price
         {
             get => _price;
-            set { _price = value; OnPropertyChanged(); } // Notify UI of changes
+            set { _price = value; OnPropertyChanged(); }
+        }
+
+        public string NameFilter
+        {
+            get => _nameFilter;
+            set { _nameFilter = value; OnPropertyChanged(); ApplyFilters(); }
+        }
+
+        public string CodeFilter
+        {
+            get => _codeFilter;
+            set { _codeFilter = value; OnPropertyChanged(); ApplyFilters(); }
+        }
+
+        public decimal MinPriceFilter
+        {
+            get => _minPriceFilter;
+            set { _minPriceFilter = value; OnPropertyChanged(); ApplyFilters(); }
+        }
+
+        public decimal MaxPriceFilter
+        {
+            get => _maxPriceFilter;
+            set { _maxPriceFilter = value; OnPropertyChanged(); ApplyFilters(); }
         }
 
         public ProductViewModel()
@@ -56,7 +90,9 @@ namespace RegisterAppBenner.ViewModels
                 _productService.Add(product);  // Add to service (with validation)
                 Products.Add(product);         // Add to observable collection for UI
                 ClearFields();                 // Clear input fields
+                MessageBox.Show("Produto adicionado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.Message, "Erro ao adicionar produto", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -77,8 +113,10 @@ namespace RegisterAppBenner.ViewModels
                 return;
             }
 
-            _productService.UpdatePrice(SelectedProduct.Id, Price);
+            _productService.UpdateProduct(SelectedProduct.Id,Name, Code, Price);
             SelectedProduct.Price = Price;
+            SelectedProduct.Name = Name;
+            SelectedProduct.Code = Code;
             MessageBox.Show("Produto atualizado com sucesso!");
         }
 
@@ -95,6 +133,31 @@ namespace RegisterAppBenner.ViewModels
             MessageBox.Show("Produto removido com sucesso!");
         }
 
+        private void ApplyFilters() 
+        {
+            List<ProductModel> allProducts = _productService.GetAll();
+
+            bool NameMatches(ProductModel p)
+                => string.IsNullOrWhiteSpace(NameFilter)
+                   || (!string.IsNullOrEmpty(p.Name)
+                       && p.Name.IndexOf(NameFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            bool CodeMatches(ProductModel p)
+                => string.IsNullOrWhiteSpace(CodeFilter)
+                   || (!string.IsNullOrEmpty(p.Code)
+                       && p.Code.IndexOf(CodeFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            bool PriceMatches(ProductModel p)
+                => (MinPriceFilter <= 0 || p.Price >= MinPriceFilter)
+                   && (MaxPriceFilter <= 0 || p.Price <= MaxPriceFilter);
+
+            IEnumerable<ProductModel> filtered = allProducts.Where(p =>
+                NameMatches(p) && CodeMatches(p) && PriceMatches(p));
+
+            Products.Clear();
+            foreach (ProductModel product in filtered)
+                Products.Add(product);
+        }
 
         private void ClearFields()  // general function to clear input fields
         {
