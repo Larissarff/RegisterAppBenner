@@ -1,8 +1,9 @@
+using RegisterAppBenner.Models;
+using RegisterAppBenner.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RegisterAppBenner.Models;
-using RegisterAppBenner.Services;
 
 namespace RegisterAppBenner.Services
 {
@@ -15,7 +16,7 @@ namespace RegisterAppBenner.Services
         {
             _dataService = new JsonDataService<PersonModel>(_filePath);
 
-            var existing = _dataService.LoadData(); // Load existing data to sync IDs
+            List<PersonModel> existing = _dataService.LoadData(); // Load existing data to sync IDs
         }
 
         public List<PersonModel> GetAll() => _dataService.LoadData(); // Get all persons
@@ -29,19 +30,19 @@ namespace RegisterAppBenner.Services
 
         public PersonModel? GetById(int id) // Search by ID
         {
-            var people = _dataService.LoadData();
+            List<PersonModel> people = _dataService.LoadData();
             return people.FirstOrDefault(p => p.Id == id);
         }
 
         public PersonModel? GetByCpf(string cpf) // Search by CPF
         {
-            var people = _dataService.LoadData();
+            List<PersonModel> people = _dataService.LoadData();
             return people.FirstOrDefault(p => p.Cpf == cpf);
         }
 
         public bool Exists(string cpf) // Check if CPF exists
         {
-            var people = _dataService.LoadData();
+            List<PersonModel> people = _dataService.LoadData();
             return people.Any(p => p.Cpf == cpf);
         }
 
@@ -49,15 +50,22 @@ namespace RegisterAppBenner.Services
         {
             _dataService.Update(p => p.Id == id, p => p.Address = newAddress);
         }
-        public void Update(PersonModel updatedPerson) // Update person details
+
+        public void Update(PersonModel updatedPerson)
         {
-            _dataService.Update(p => p.Id == updatedPerson.Id, p =>
-            {
-                p.Name = updatedPerson.Name;
-                p.Cpf = updatedPerson.Cpf;
-                p.Address = updatedPerson.Address;
-            });
+            List<PersonModel> people = _dataService.LoadData();
+            PersonModel? existing = people.FirstOrDefault(p => p.Id == updatedPerson.Id);
+
+            if (existing == null)
+                throw new Exception("Pessoa não encontrada.");
+
+            existing.Name = updatedPerson.Name;
+            existing.Cpf = updatedPerson.Cpf;
+            existing.Address = updatedPerson.Address;
+
+            _dataService.SaveData(people);
         }
+
 
         public void DeleteById(int id) => _dataService.Delete(p => p.Id == id); // Delete by ID
     }
