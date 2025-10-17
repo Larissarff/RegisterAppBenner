@@ -125,8 +125,8 @@ namespace RegisterAppBenner.ViewModels
                 if (OrderItems.Count == 0)
                     throw new Exception("Adicione pelo menos um item ao pedido.");
 
-                var items = new List<OrderItemModel>(OrderItems);
-                var order = new OrderModel(SelectedPerson, items, SelectedPaymentMethod);
+                List<OrderItemModel> items = new List<OrderItemModel>(OrderItems);
+                OrderModel order = new OrderModel(SelectedPerson, items, SelectedPaymentMethod);
 
                 _orderService.Add(order);
                 Orders.Add(order);
