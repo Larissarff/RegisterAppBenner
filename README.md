@@ -89,7 +89,7 @@ A persistência utiliza **arquivos JSON locais**, manipulados pela classe genér
 
 ## 🧩 Requisitos de Execução
 
-- **.NET Framework 4.7 (ou superior)**  
+- **.NET Framework 4.6 (ou superior)**  
   👉 Baixe aqui: [Developer Pack .NET Framework 4.7](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net47)
 
 - **Visual Studio 2022**  
@@ -97,6 +97,15 @@ A persistência utiliza **arquivos JSON locais**, manipulados pela classe genér
   ☑ **Desenvolvimento de Desktop com .NET Framework**
 
 - **Sistema Operacional:** Windows 10 ou Windows 11
+- 
+---
+### ⚙️ Dependências
+
+O projeto utiliza as seguintes bibliotecas:
+
+- **System.Text.Json** — para serialização e persistência local em arquivos `.json`
+  ```bash
+  Install-Package System.Text.Json -Version 6.0.8
 
 ---
 
