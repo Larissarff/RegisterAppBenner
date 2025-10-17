@@ -78,7 +78,7 @@ A persistência utiliza **arquivos JSON locais**, manipulados pela classe genér
 
 | Categoria | Ferramenta |
 |------------|------------|
-| Linguagem | **C# (.NET Framework 4.7)** |
+| **.NET Framework 4.7** | Base do projeto (com compatibilidade retroativa à 4.6)
 | Interface Gráfica | **WPF (Windows Presentation Foundation)** |
 | Arquitetura | **MVVM (Model-View-ViewModel)** |
 | Persistência | **JSON local (System.Text.Json / File I/O)** |
