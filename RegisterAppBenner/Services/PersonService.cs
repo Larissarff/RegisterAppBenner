@@ -49,6 +49,15 @@ namespace RegisterAppBenner.Services
         {
             _dataService.Update(p => p.Id == id, p => p.Address = newAddress);
         }
+        public void Update(PersonModel updatedPerson) // Update person details
+        {
+            _dataService.Update(p => p.Id == updatedPerson.Id, p =>
+            {
+                p.Name = updatedPerson.Name;
+                p.Cpf = updatedPerson.Cpf;
+                p.Address = updatedPerson.Address;
+            });
+        }
 
         public void DeleteById(int id) => _dataService.Delete(p => p.Id == id); // Delete by ID
     }
