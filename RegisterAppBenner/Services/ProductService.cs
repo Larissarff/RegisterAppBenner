@@ -68,7 +68,7 @@ namespace RegisterAppBenner.Services
                 return product.Any(p => p.Name == name);
             }
 
-            public void UpdateProduct(int id, string newName, string newCode, decimal newPrice) // Update price by ID
+            public void UpdateProduct(int id, string? newName, string? newCode, decimal? newPrice) // Update price by ID
             {
                 List<ProductModel> product = _dataService.LoadData();
                 ProductModel? existing = product.FirstOrDefault(p => p.Id == id);
@@ -79,11 +79,16 @@ namespace RegisterAppBenner.Services
                 _dataService.Update(p => p.Id == id,
                     p =>
                     {
-                        p.Name = newName;
-                        p.Code = newCode;
-                        p.Price = newPrice;
+                        if (!string.IsNullOrWhiteSpace(newName))
+                            p.Name = newName;
+
+                        if (!string.IsNullOrWhiteSpace(newCode))
+                            p.Code = newCode;
+
+                        if (newPrice.HasValue)
+                            p.Price = newPrice.Value;
                     });
-            }
+               }
 
             public void DeleteById(int id)
             {
