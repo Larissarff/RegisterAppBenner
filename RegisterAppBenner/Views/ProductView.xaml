@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:RegisterAppBenner.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="950">
 
     <UserControl.DataContext>
         <viewModels:ProductViewModel/>
@@ -18,38 +18,53 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- FILTROS -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <Label Content="Nome:" Width="80" VerticalAlignment="Center"/>
-            <TextBox Width="180" Margin="0 0 20 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="Filtrar por Nome:" Width="120" VerticalAlignment="Center"/>
+            <TextBox Width="150" Margin="0 0 20 0" Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Filtrar por Código:" Width="120" VerticalAlignment="Center"/>
+            <TextBox Width="100" Margin="0 0 20 0" Text="{Binding CodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Valor Mínimo:" Width="100" VerticalAlignment="Center"/>
+            <TextBox Width="80" Margin="0 0 10 0" Text="{Binding MinPriceFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Valor Máximo:" Width="100" VerticalAlignment="Center"/>
+            <TextBox Width="80" Text="{Binding MaxPriceFilter, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <!-- CAMPOS DE CADASTRO -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 0 0 10">
+            <Label Content="Nome:" Width="60" VerticalAlignment="Center"/>
+            <TextBox Width="200" Margin="0 0 20 0" Text="{Binding Name}"/>
 
             <Label Content="Código:" Width="70" VerticalAlignment="Center"/>
-            <TextBox Width="120" Margin="0 0 20 0" Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Width="120" Margin="0 0 20 0" Text="{Binding Code}"/>
 
-            <Label Content="Preço:" Width="60" VerticalAlignment="Center"/>
-            <TextBox Width="100" Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"/>
-        </StackPanel>
+            <Label Content="Preço:" Width="50" VerticalAlignment="Center"/>
+            <TextBox Width="100" Text="{Binding Price}"/>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 0 0 10">
-            <Button Content="Adicionar" Width="100" Margin="0 0 10 0"
-                    Click="AddProduct_Click"/>
+            <Button Content="Adicionar" Width="100" Margin="20 0 10 0"
+                    Background="#4CAF50" Foreground="White" Click="AddProduct_Click"/>
             <Button Content="Atualizar" Width="100" Margin="0 0 10 0"
-                    Click="UpdateProduct_Click"/>
+                    Background="#FF9800" Foreground="White" Click="UpdateProduct_Click"/>
             <Button Content="Excluir" Width="100"
-                    Click="DeleteProduct_Click"/>
+                    Background="#F44336" Foreground="White" Click="DeleteProduct_Click"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Products}" 
+        <!-- GRID -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Products}"
                   SelectedItem="{Binding SelectedProduct}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   IsReadOnly="False"
-                  Margin="0,10,0,0">
-
+                  Margin="0,10,0,0"
+                  Height="350">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Nome" Binding="{Binding Name}" Width="200"/>
-                <DataGridTextColumn Header="Código" Binding="{Binding Code}" Width="100"/>
-                <DataGridTextColumn Header="Preço (R$)" Binding="{Binding Price}" Width="120"/>
+                <DataGridTextColumn Header="Código" Binding="{Binding Code}" Width="150"/>
+                <DataGridTextColumn Header="Preço (R$)" Binding="{Binding Price, StringFormat=N2}" Width="120"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
